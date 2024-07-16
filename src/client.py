@@ -5,7 +5,7 @@ import tkinter as tk
 
 class client:
     def __init__(self) -> None:
-        self.designer = ''
+        self.gui = ''
         self.user =''
         self.host = "127.0.0.1"
         self.port = 8888
@@ -19,7 +19,7 @@ class client:
         while True:
             message = await self.reader.read(1024)  # Получаем сообщение от сервера
             print(f"{message.decode().strip()}")
-            await self.designer.receive_message(message.decode().strip())  
+            await self.gui.receive_message(message.decode().strip())  
             if "вы отключены от сервера" in message.decode().strip():
                 return
             
@@ -43,7 +43,7 @@ class client:
         await self.receive_message()
         self.writer.close()
         
-class designer:
+class gui:
     def __init__(self, client):
         self.client = client
         
@@ -103,8 +103,8 @@ class designer:
  
 async def main():
     my_client = client()
-    my_des = designer(my_client)
-    my_client.designer = my_des
+    my_des = gui(my_client)
+    my_client.gui = my_des
     tasks = [
         asyncio.create_task(my_client.start_client()),
         asyncio.create_task(my_des.update())
